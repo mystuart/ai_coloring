@@ -1,0 +1,27 @@
+<mp-navigation-bar back="{{true}}" title="配置大模型">
+</mp-navigation-bar>
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<mp-cells ext-class="my-cells" title="大模型">
+		<mp-cell title="推荐">
+			<my-button-group buttons="{{recommendButtons || []}}" bind:clicked="recommend" />
+		</mp-cell>
+		<mp-cell title="算法">
+			<radio-group style="display: flex;flex-direction: column; align-items: flex-end;" bindchange="modelChanged" >
+				<radio checked="{{item === selectedPublicModel.modelName}}" wx:for="{{LLMs}}" value="{{item}}" wx:key="index" style="width: 150px;font-size: smaller;margin-bottom: 3px;">
+					{{m[item]}}
+				</radio>
+			</radio-group>
+		</mp-cell>
+		<mp-cell title="温度">
+			<slider min="0" max="200" step="10" value="{{temperature}}" bindchange="temperatureChanged" />
+		</mp-cell>
+		<mp-cell title="长度">
+			<slider value="{{max_token }}" min="0" max="{{max_tokens}}" bindchange="maxTokenChanged" />
+		</mp-cell>
+		<view slot="footer" style="display: flex;font-size: smaller;color: gray;flex-direction: column;margin-left: 8px;">
+			<text>算法版本越高、价格越贵、长度越大</text>
+			<text>温度数值越大、越是发散</text>
+			<text>价格和长度成正比.数值越大、回复长度越大</text>
+		</view>
+	</mp-cells>
+</scroll-view>

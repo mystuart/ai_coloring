@@ -1,0 +1,11 @@
+<my-button-group bind:clicked="expressClicked" buttons="{{expressButtons||[]}}" />
+<mp-half-screen-dialog show="{{showExpress}}" title="一键生成使用方式" bindclose="closeExpress">
+	<view slot="desc" style="display: flex;flex-direction: column;">
+		<view style="font-size: smaller;margin-bottom: 8px;display: flex;flex-direction: column;" wx:for="{{ expressExamples }}" wx:key="index">
+			<text style="font-size: smaller;color: gray;">{{ item[0] }}</text>
+			<text style="font-size: smaller;" bind:tap="copyExpress" data-data="{{ item[1] }}">{{ item[1] }}</text>
+		</view>
+
+		<my-tip tip="请替换掉示例文字再提交;其中的'|||'用于分隔多个问题;点击可以复制"/>
+	</view>
+</mp-half-screen-dialog>

@@ -1,0 +1,9 @@
+{
+	"component": true,
+	"usingComponents": {
+		"mp-cell": "weui-miniprogram/cell/cell",
+		"mp-cells": "weui-miniprogram/cells/cells",
+		"my-button-group": "/components/button_group/button_group",
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog"
+	}
+}

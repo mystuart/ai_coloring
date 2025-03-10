@@ -1,0 +1,71 @@
+<view class="container" wx:if="{{ logged}}">
+	<my-button-group buttons="{{ buttons ||[] }}" bind:clicked="buttonsTap" />
+</view>
+
+<mp-half-screen-dialog bindbuttontap="chargeOK" show="{{showCharge}}" maskClosable="{{false}}" title="AA充值" buttons="{{ monthButtons || [] }}">
+	<view slot="desc" style="border:1px dashed gray;display: flex;flex-direction: column;">
+		<swiper wx:if="{{ isMonth }}" bindchange="chargeItemChanged" interval="1000" indicator-dots="true" circular="true" style="margin:8px;" indicator-color="#409eff">
+			<swiper-item wx:for="{{MONTH_ITEMS}}" wx:key="money">
+				<view style="display: flex; align-items: center;justify-content: center;">
+					<view style="display: flex;align-items: center;justify-content: center;font-size: xx-large;" id="footer">
+						<text>{{ item["money"] }}元</text>
+					</view>
+					<view style="display: flex; flex-direction: column;">
+						<view style="display: flex;align-items: center;justify-content: center;font-size: large;" id="header">
+							<text>{{ item["category"] }}</text>
+							<text>{{ item["level"] }}</text>
+						</view>
+						<view style="display: flex;align-items: center;justify-content: center;flex-direction: column;margin-top: 16px;margin-bottom: 16px;" id="body">
+							<text>提问数:{{ item["text_count"] }}</text>
+							<text>绘画数:{{ item["image_count"] }}</text>
+							<text>OCR数:{{ item["ocr_count"] }}</text>
+						</view>
+
+					</view>
+				</view>
+			</swiper-item>
+		</swiper>
+		<swiper  wx:else bindchange="chargeItemChanged" interval="1000" indicator-dots="true" circular="true" style="margin:8px;" indicator-color="#409eff">
+			<swiper-item wx:for="{{giver_items}}" wx:key="money">
+				<view style="display: flex; flex-direction: column;">
+					<view style="display: flex;align-items: center;justify-content: center;font-size: large;" id="header">
+						<text>{{ item["charge"] }}元</text>
+					</view>
+					<view style="display: flex;align-items: center;justify-content: center;flex-direction: column;margin-top: 16px;margin-bottom: 16px;" id="body">
+						<text>赠送:{{ item["givePercent"] }}%</text>
+					</view>
+					<view style="display: flex;align-items: center;justify-content: center;margin-bottom: 8px;" id="footer">
+						<text>实充{{ item["real"] }}元</text>
+					</view>
+				</view>
+			</swiper-item>
+		</swiper>
+		<view style="display: flex;align-items: center;">
+			<switch model:checked="{{ isMonth }}">{{ isMonth ? "包月" :"随意充" }}</switch>
+			<image wx:if="{{isMonth}}" style="width: 24px;height:24px;" src="https://rocy-ai.wang/mp_images/vip.png"></image>
+		</view>
+
+	</view>
+</mp-half-screen-dialog>
+<mp-half-screen-dialog extClass="account-half" style="z-index: 6000;" bindclose="closeModelPriceDialog" show="{{showModelPriceDialog}}" title="大模型详情">
+	<scroll-view slot="desc" scroll-y="{{ true }}">
+		<text style="text-align: left;font-size: smaller;" wx:for="{{modelPriceList}}" wx:key="index">
+			{{item}}
+		</text>
+	</scroll-view>
+</mp-half-screen-dialog>
+<mp-half-screen-dialog title="VIP" show="{{showVipDialog}}" bindclose="closeVip">
+	<swiper slot="desc" style="height: 300px">
+		<swiper-item wx:for="{{ balances }}" wx:key="from_date">
+			<scroll-view scroll-y="{{true}}" type="list">
+				<mp-cells>
+					<mp-cell title="开始日期" footer="{{ item['from_date'] }}" />
+					<mp-cell title="结束日期" footer="{{ item['until_date'] }}" />
+					<mp-cell title="提问数" footer="{{ item['text_count'] }}" />
+					<mp-cell title="绘画数" footer="{{ item['image_count'] }}" />
+					<mp-cell title="OCR数" footer="{{ item['ocr_count'] }}" />
+				</mp-cells>
+			</scroll-view>
+		</swiper-item>
+	</swiper>
+</mp-half-screen-dialog>

@@ -1,0 +1,81 @@
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<view style="display: flex;width: 100%;justify-content: space-between;">
+		<view style="margin-left:8px;position:static;color: white;background-color: #409eff;width: 100px;height: 100px;font-size: x-large;display: block;">
+			<text class="left-a">A</text>
+			<text class="right-a">A</text>
+			<text class="bottom-v">V</text>
+		</view>
+		<view style="display: flex;flex-direction: column;font-size: smaller;">
+			<text style="font-size: smaller;">您好:{{phone4||'匿名用户'}}</text>
+			<my-account-view />
+			<text style="font-size: smaller;">您的智能助手:AA=AI Assistant</text>
+		</view>
+	</view>
+	<my-divider />
+	<view style="font-size: smaller; display: flex;flex-direction: column;border: 1px dashed #4090EF;margin: 8px;;padding: 8px;">
+		<view wx:if="{{ false }}" style="display: flex;flex-direction: column;border: 1px dashed #4090EF;">
+			<mp-cells wx:if="{{logged}}">
+				<mp-cell title="推荐人">
+					<text slot="footer" style="margin-left: 8px;font-style: italic;font-size: x-small;">{{by_share_phone4}}</text>
+				</mp-cell>
+				<mp-cell title="推荐人数">
+					<text slot="footer" style="margin-left: 8px;font-style: italic;font-size: x-small;">{{shareRegisteredCount}}</text>
+				</mp-cell>
+				<mp-cell title="获得奖励">
+					<text slot="footer" style="margin-left: 8px;font-style: italic;font-size: x-small;">{{recommendAward}}</text>
+				</mp-cell>
+				<button bind:tap="recommendIt" type="primary" style="margin-top: 3px;margin-bottom:3px;">我要推荐</button>
+				<text slot="footer" style="align-self: flex-end;color: gray;margin:3px;">{{awardTip}}</text>
+			</mp-cells>
+			<button bind:tap="toLogin" wx:if="{{logged === false}}" type="primary" style="margin-top: 3px;margin-bottom:3px;">我要登录/注册</button>
+		</view>
+		<mp-cells style="font-style: italic;">
+			<mp-cell bind:tap="recordTap" data-name="用户协议" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/user_agreement.svg" class="my-icon-24"></image>
+				<text slot="footer">用户协议</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="隐私政策" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/privacy.svg" class="my-icon-24"></image>
+				<text slot="footer">隐私政策</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="关于我们" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/about.svg" class="my-icon-24"></image>
+				<text slot="footer">关于我们</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="加入我们" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/join_us.svg" class="my-icon-24"></image>
+				<text slot="footer">加入我们</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="商务合作" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/cooperation.svg" class="my-icon-24"></image>
+				<text slot="footer">商务合作</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="下载APP" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/download_blue.svg" class="my-icon-24"></image>
+				<text slot="footer">下载APP</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="PC版官网" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/home_blue.svg" class="my-icon-24"></image>
+				<text slot="footer">PC版官网</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="意见反馈" link="true">
+				<image slot="title" src="https://rocy-ai.wang/mp_images/advice.svg" class="my-icon-24"></image>
+				<text slot="footer">意见反馈</text>
+			</mp-cell>
+			<mp-cell bind:tap="recordTap" data-name="联系客服" link="true">
+				<image slot="title" src="/mp_images/client_service.svg" class="my-icon-24"></image>
+				<button plain="{{ true }}" type="primary" size="mini" open-type="contact" slot="footer">联系客服</button>
+			</mp-cell>
+			<mp-cell>
+
+			</mp-cell>
+			<mp-cell>
+				<view style="display: flex;flex-direction: column;">
+					<button size="mini" bind:tap="recordTap" data-name="切换账号" type="primary" style="width: 100%;">{{ logged ? '切换账号' :'登录' }}</button>
+					<button wx:if="{{logged === true}}" size="mini" bind:tap="recordTap" data-name="注销账号" type="primary" style="width: 100%;margin-top: 8px;">注销账号</button>
+					<button wx:if="{{logged === true}}" size="mini" bind:tap="recordTap" data-name="退出" type="primary" style="width: 100%;margin-top: 8px;">退出</button>
+				</view>
+			</mp-cell>
+		</mp-cells>
+	</view>
+</scroll-view>

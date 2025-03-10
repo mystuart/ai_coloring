@@ -1,0 +1,11 @@
+.my-bc-image {
+	width: calc(100% - 2px);
+	align-self: center;
+}
+
+.my-bc-image-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 8px;
+}

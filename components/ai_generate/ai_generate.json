@@ -1,0 +1,7 @@
+{
+	"component": true,
+	"usingComponents": {
+		"my-public-private": "/components/public_private/public_private",
+		"my-account-view": "/components/my_account_view/my_account_view"
+	}
+}

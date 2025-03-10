@@ -1,0 +1,42 @@
+.bg-text {
+	height: 16px;
+	width: 16px;
+}
+
+.btn-container {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
+.container-boder {
+	padding: 3px;
+	border: 1px dashed gray;
+	margin-right: 3px;
+	background-color: white;
+}
+
+.btn-container .btn-group {
+	margin: 1px;
+	padding: 8px;
+	min-width: 50px;
+	height: 24px;
+	font-weight: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5;
+}
+
+.btn-success {
+	background-color: #67C23A;
+	color: white;
+	border-radius: 0%;
+}
+
+.btn-primary {
+	background-color: #409EFF;
+	color: white;
+	border-radius: 0%;
+}

@@ -1,0 +1,8 @@
+<view style="display: flex;height: 100%; flex-direction: column; align-items: center; border:grey 1px dashed; margin:8px;padding: 16px;">
+	<view style="width: 100%;display: flex;align-items: center;justify-content: space-between;">
+		<text style="font-size:large;">{{ title }}</text>
+		<text style="font-size:smaller;"> {{ alias }}</text>
+	</view>
+	<image bind:tap="goto" style="width: 100%;margin-top: 8px;margin-bottom: 8px;" src="{{ image }}"></image>
+	<text style="font-size: smaller;">{{ description }}</text>
+</view>

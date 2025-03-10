@@ -1,0 +1,4 @@
+<view class="my-tip-container">
+	<image src="https://rocy-ai.wang/mp_images/tip.svg" style="width: 16px;height:16px;"></image>
+	<text class="my-tip-item" wx:for="{{ tips }}" wx:key="index">{{ item }}</text>
+</view>

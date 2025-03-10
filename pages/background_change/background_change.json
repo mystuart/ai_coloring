@@ -1,0 +1,9 @@
+{
+	"usingComponents": {
+		"my-divider": "/components/divider/divider",
+		"my-tip": "/components/tip/tip",
+		"my-account-view": "/components/my_account_view/my_account_view",
+		"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+		"my-color-picker": "../../components/color_picker/color_picker"
+	}
+}

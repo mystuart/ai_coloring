@@ -1,0 +1,40 @@
+<mp-navigation-bar back="{{true}}" title="{{'AI 卡照识别批量'}}" />
+<scroll-view scroll-y type="list" style="margin: 3px; width: calc(100% - 6px);">
+	<view style="display: flex;flex-direction: column;width: 100%;">
+		<my-tip tip="{{'这是OCR助手;既能批量从图中识别文字;还能用于大模型'}}"></my-tip>
+		<my-account-view price="{{'OCR'}}"></my-account-view>
+		<mp-cell title="图片类别">
+			<picker slot="footer" model:value="{{selectedIndex}}" range="{{cardTypes}}">
+				<button size="mini" type="primary" style="display: flex;align-items: center;width: 100px;justify-content: space-between;">
+					<text style="display: flex;justify-content: center;font-size: smaller;">{{ selectedCardName }}</text>
+					<image src="https://rocy-ai.wang/mp_images/down_white.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+				</button>
+			</picker>
+		</mp-cell>
+		<mp-cell title="上传图片">
+			<button bind:tap="viewImages" size="mini" type="primary" style="display: flex;align-items: center;justify-content: space-between;margin-left: 3px; margin-right: 3px;" wx:if="{{ images.length > 0}}">
+				<text style="font-size: smaller;">{{ images.length ? images.length + '个':'' }}</text>
+				<image src="https://rocy-ai.wang/mp_images/photos.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+			</button>
+			<button bind:tap="uploadImages" slot="footer" size="mini" type="primary" style="display: flex;align-items: center;width: 100px;justify-content: space-between;">
+				<text style="display: flex;justify-content: center;font-size: smaller;">批量上传</text>
+				<image src="https://rocy-ai.wang/mp_images/upload_image_white.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+			</button>
+		</mp-cell>
+		<button disabled="{{ executing || images.length === 0}}" bind:tap="execute" type="primary" size="mini" style="width: 100%;margin:3px;">批量识别</button>
+		<view style="display: flex;align-items: center;justify-content: space-between;">
+			<button wx:if="{{ results.length > 0 }}" bind:tap="viewResults" type="primary" size="mini" style="width: 100%;margin:3px;flex: 1;">查看结果{{results.length}}个</button>
+			<button wx:if="{{ results.length > 0 }}" bind:tap="deleteResults" type="primary" size="mini" style="width: 100%;margin:3px;flex: 1;">清除结果</button>
+		</view>
+	</view>
+	<mp-gallery bind:hide="hideGallery" showDelete="{{true}}" bind:delete="deleteImage" show="{{ showGallary }}" imgUrls="{{ fileUrls }}"></mp-gallery>
+	<mp-half-screen-dialog bindbuttontap="copyResults" buttons="{{ resultButtons || [] }}" bindclose="closeResults" title="识别结果" show="{{ showResults }}" subTitle="{{ results.length + '个' }}">
+		<swiper slot="desc" indicator-dots="{{ true }}">
+			<swiper-item wx:for="{{ results }}" wx:key="index">
+				<textarea style="max-height: 200px;padding: 8px;overflow-y: auto;width: 100%;" value="{{ item }}">
+				</textarea>
+			</swiper-item>
+		</swiper>
+	</mp-half-screen-dialog>
+</scroll-view>
+<my-compress-img files="{{files}}" bind:compressed="filesCompressed"/>

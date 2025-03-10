@@ -1,0 +1,19 @@
+.my-tip-container {
+	display: flex;
+	align-items: center;
+	padding: 3px;
+	width: 100%;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	flex-wrap: wrap;
+}
+
+.my-tip-item {
+	margin-left: 3px;
+	margin-right: 3px;
+	font-size: x-small;
+	color: gray;
+	padding: 3px;
+	border: 1px dashed gray;
+	margin: 3px;
+}

@@ -1,0 +1,13 @@
+<view style="display: flex; flex-direction: column; align-items: center;background-color: #eee;margin-top: 8px;margin-bottom: 8px;padding-top: 3px;font-size: smaller;">
+	<radio-group style="margin-right: 8px;align-self: flex-end;margin-bottom: 8px;" bindchange="pureChanged">
+		<radio style="margin-right: 3px;" value="white">白底</radio>
+		<radio style="margin-right: 3px;" value="red">红底</radio>
+		<radio value="blue">蓝底</radio>
+	</radio-group>
+	<view style=" border: 1px dashed gray; border-radius: 50px; width: 100px;height:100px;background-color: {{selectedColor}};"></view>
+	<view style="width: 100%;display: flex;flex-direction: column;">
+		<slider block-size="20" show-value="{{ true }}" activeColor="{{ selectedColorR }}" min="0" max="255" model:value="{{selectedRed }}" />
+		<slider block-size="20" show-value="{{ true }}" activeColor="{{ selectedColorG }}" min="0" max="255" model:value="{{selectedGreen }}" />
+		<slider show-value="{{ true }}" activeColor="{{ selectedColorB }}" min="0" max="255" block-size="20" model:value="{{selectedBlue }}" />
+	</view>
+</view>

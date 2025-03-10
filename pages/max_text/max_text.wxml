@@ -1,0 +1,8 @@
+<mp-navigation-bar back="{{true}}" title="{{ maxContent['name'] }}">
+</mp-navigation-bar>
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<web-view wx:if="{{ isWebView }}" src="{{ webViewUrl }}"></web-view>
+	<view wx:else style="width: calc(100% - 16px);margin:8px;">
+		<text user-select="auto">{{maxContent['text']}}</text>
+	</view>
+</scroll-view>

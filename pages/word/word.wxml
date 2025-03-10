@@ -1,0 +1,135 @@
+<wxs module="util" src="../../utils/wxml.wxs" />
+<template name="title">
+	<view style="display: flex;justify-content: space-between;align-items: center;">
+		<image bind:tap="showMenu" data-index="{{ index }}" src="https://rocy-ai.wang/mp_images/text_black.svg" class="my-icon" />
+		<textarea style="border-bottom: 1px solid {{ index === itemIndex ? 'gray':'white' }}" auto-focus="true" bindblur="textChanged" data-index="{{ index }}" bind:tap="itemTap" class="my-word-title my-word-item" auto-height value="{{item.content}}" />
+		<text style="font-size: xx-small;color: gray;">共{{totalLength}}字</text>
+	</view>
+	<my-divider />
+</template>
+<template name="header">
+	<view style="display: flex;align-items: center;justify-content: space-between; width: 100%;">
+		<view style="display: flex; flex-grow: 1;align-items: center;flex-shrink: 1;">
+			<image bind:tap="showMenu" data-index="{{ index }}" src="https://rocy-ai.wang/mp_images/header.svg" class="my-icon" />
+			<view style="width: {{ item.deep * 8 }}px;"></view>
+			<textarea style="border-bottom: 1px solid {{ index === itemIndex ? 'gray':'white' }};font-size: {{20 - item.deep * 2}}px; line-height: {{20 - item.deep * 2}}px;" bindblur="textChanged" data-index="{{ index }}" bind:tap="itemTap" auto-height value="{{item.content}}" class="my-word-item" />
+		</view>
+	</view>
+</template>
+<template name="text">
+	<view style="width: 100%;display: flex;">
+		<image bind:tap="showMenu" data-index="{{ index }}" src="https://rocy-ai.wang/mp_images/paragraph.svg" class="my-icon" />
+		<text data-index="{{ index }}" bind:tap="itemTap" style="font-size: xx-small;flex:1" wx:if="{{ item['short'] === true }}">{{ util.short(item.content,15) }}...</text>
+		<textarea style="border-bottom: 1px solid {{ index === itemIndex ? 'gray':'white' }}" data-index="{{ index }}" bind:tap="itemTap" bindblur="textChanged" wx:else auto-height value="{{item.content}}" maxlength="-1" class="my-word-text my-word-item" />
+		<text style="font-size: xx-small;color: gray;">{{ util.length(item.content)}}字</text>
+	</view>
+</template>
+<template name="image">
+	<view style="width: 100%;display: flex; align-items: center;justify-content: space-between;">
+		<image bind:tap="showMenu" data-index="{{ index }}" src="https://rocy-ai.wang/mp_images/image_black.svg" class="my-icon" />
+		<image mode="aspectFit" src="{{ item.content }}" wx:if="{{ item['short'] === true }}" class="my-word-image-short my-word-item" />
+		<image style="border-bottom: 1px solid {{ index === itemIndex ? 'gray':'white' }};flex: 1;" show-menu-by-longpress fade-in  mode="widthFix" src="{{ item.content }}" wx:else data-index="{{ index }}" bind:tap="itemTap" class="my-word-image my-word-item" />
+		<view />
+	</view>
+</template>
+<image wx:if="{{ menuShowSystem === false }}" bind:tap="showMenuSystem" src="https://rocy-ai.wang/mp_images/word.svg" class="my-word-right-menu-system-handler" />
+<image wx:if="{{ menuShow === false }}" bind:tap="showMenu" src="https://rocy-ai.wang/mp_images/menu_black.svg" class="my-word-right-menu-handler" />
+<view wx:if="{{ menuShowSystem === true }}" class="my-word-right-menu-system">
+	<my-button-group bind:clicked="menuClicked" buttons="{{ menuButtonsSystem || [] }}" border="{{true}}" style="margin:3px 0;" horizontal="{{ false }}">
+		<my-account-view wx:if="{{moneyShow}}" show_model_price="{{ true }}" />
+		<my-public-private wx:if="{{modelShow}}" />
+	</my-button-group>
+</view>
+<view wx:if="{{ menuShow === true }}" class="my-word-right-menu">
+	<my-button-group bind:clicked="menuClicked" buttons="{{ menuButtons || [] }}" border="{{true}}" horizontal="{{ false }}" />
+</view>
+<scroll-view scroll-y type="list" scroll-with-animation>
+	<view style="height: 100%;display: flex;flex-direction: column;padding-top: 30px;">
+		<view style="display: flex;flex-direction: column;padding: 8px; padding-top: 3px; font-weight: 100;">
+			<view wx:for="{{items}}" style="margin-bottom: 8px;" wx:key="index">
+				<template wx:if="{{item.type === TYPE_TITLE}}" is="title" data="{{ ...({item,index,totalLength,itemIndex}) }}"></template>
+				<template wx:if="{{item.type === TYPE_HEADER}}" is="header" data="{{ ...({item,index,itemIndex}) }}"></template>
+				<template wx:if="{{item.type === TYPE_TEXT}}" is="text" data="{{ ...({item,index,itemIndex}) }}"></template>
+				<template wx:if="{{item.type === TYPE_IMAGE}}" is="image" data="{{ ...({item,index,itemIndex}) }}"></template>
+			</view>
+		</view>
+	</view>
+	<mp-half-screen-dialog extClass="my-word-half" title="输入文件名称" show="{{showFileNameDialog}}" bindbuttontap="gotFileName" buttons="{{[{text:'取消',type: 'default'},{text:'确定',type:'primary'}]}}">
+		<input slot="desc" model:value="{{filename}}" type="text" placeholder="在这里输入文件名称" />
+	</mp-half-screen-dialog>
+	<mp-half-screen-dialog title="输入图片网络地址" show="{{showImageUrlDialog}}" bindbuttontap="gotImageUrl" buttons="{{[{text:'取消',type: 'default'},{text:'确定',type:'primary'}]}}">
+		<input slot="desc" model:value="{{remoteImageUrl}}" type="text" placeholder="在这里输入图片网络地址" />
+	</mp-half-screen-dialog>
+	<mp-half-screen-dialog title="文字编辑" show="{{itemContentEditShow === true}}" bindbuttontap="gotEditContent" buttons="{{[{text:'取消',type: 'default'},{text:'确定',type:'primary'}]}}">
+		<textarea slot="desc" auto-height model:value="{{itemContentEditing}}" style="width: 100%;min-height: 300px;" placeholder="输入文字内容" />
+	</mp-half-screen-dialog>
+
+	<mp-half-screen-dialog title="打开文件" show="{{ showOpenWordDialog && (words.length > 0) }}" bindclose="closeOpenWordDialog">
+		<view style="display: flex;flex-direction: column;width: 100%;max-height: 300px;overflow-y: auto;font-size: smaller;" slot="desc">
+			<view style="display: flex;justify-content: space-between;margin:8px 0;" wx:for="{{ words }}" wx:key="id">
+				<view style="display: flex;align-items: center;">
+					<image src="https://rocy-ai.wang/mp_images/word.svg" class="my-icon" />
+					<text>{{ item.filename }}</text>
+				</view>
+				<view style="display: flex;align-items: center;">
+					<text>{{ item.create_text }}</text>
+					<button bind:tap="openWord" disabled="{{ id === item.id }}" data-id="{{item.id}}" size="mini" type="primary" style="margin-left:8px;padding:3px;height: fit-content;display: flex;align-items: center;">
+						<image style="width: 16px;height: 16px;" src="https://rocy-ai.wang/mp_images/open_white.svg" />
+					</button>
+					<button bind:tap="deleteWord" disabled="{{ item.id === null }}" data-id="{{item.id}}" size="mini" type="warn" style="margin-left:8px;padding:3px;height: fit-content;display: flex;align-items: center;">
+						<image style="width: 16px;height: 16px;" src="https://rocy-ai.wang/mp_images/delete.svg" />
+					</button>
+				</view>
+			</view>
+		</view>
+	</mp-half-screen-dialog>
+	<mp-half-screen-dialog extClass="my-word-half" title="{{ generation_title }}" show="{{generation_title}}" bindbuttontap="generate" buttons="{{[{text:'取消',type: 'default'},{text:'确定',type:'primary'}]}}">
+		<scroll-view slot="desc" scroll-y type="list" scroll-with-animation>
+			<view style="width: 100%;display: flex;flex-direction: column;">
+				<view style="width: 100%;" wx:if="{{ manual === true }}">
+					<my-button-group bind:clicked="manualImageClicked" wx:if="{{ generation_to === TYPE_IMAGE }}" buttons="{{ manualImageButtons }}" />
+					<view wx:else>
+						<textarea maxlength="1024" auto-height model:value="{{manual_content}}" class="model-area" placeholder="在这里输入内容" />
+						<view style="display: flex;flex-direction: column;margin:3px 0;align-items: flex-end;" wx:if="{{ generation_to === TYPE_HEADER }}">
+							<text style="font-size: smaller;">
+								每行表示一个段落标题
+							</text>
+							<checkbox style="display: flex;align-items: center;margin-top: 8px;align-self: flex-end;" model:checked="{{ sameLevelHeader }}">同级标题</checkbox>
+						</view>
+					</view>
+				</view>
+				<view style="width: 100%;" wx:else>
+					<view wx:if="{{ generation_to === TYPE_IMAGE }}" style="width: 100%;display: flex;flex-direction: column;">
+						<mp-tabbar ext-class="word-tabbar" model:current="{{currentImageModelIndex}}" style="margin-top: 3px;" list="{{modelsTabBarListImage }}" />
+						<textarea maxlength="1024" auto-height model:value="{{generation_prompt}}" class="model-area" placeholder="在这里输入AI指令" />
+						<mp-cells wx:if="{{ currentImageModelIndex === 0 }}">
+							<mp-cell title="图片大小">
+								<radio-group slot="footer" bindchange="openSizeChanged">
+									<radio wx:key="key" wx:for="{{ OPENAI_SIZES }}" value="{{ item }}"><text style="font-size: smaller;margin:3px;">{{item}}</text></radio>
+								</radio-group>
+							</mp-cell>
+						</mp-cells>
+						<mp-cells wx:else>
+							<mp-cell title="图片大小">
+								<button size="mini" slot="footer" type="primary" bind:tap="pickSDSize">{{ sdSizeSelected || SD_SIZES.length + '个尺寸' }}</button>
+							</mp-cell>
+							<mp-cell title="图片风格">
+								<button size="mini" slot="footer" type="primary" bind:tap="pickSDStyle">{{ sdStyleName || SD_STYLES.length + '个风格' }}</button>
+							</mp-cell>
+						</mp-cells>
+					</view>
+					<view wx:else style="width: 100%;display: flex;flex-direction: column;">
+						<textarea maxlength="1024" auto-height model:value="{{generation_prompt}}" class="model-area" placeholder="在这里输入AI指令" />
+						<my-public-private style="align-self: flex-end;" />
+					</view>
+				</view>
+				<my-tip tip="AI只是工具和助手;您的光辉永远无法替代;请更改上述指令" wx:if="{{ manual === false }}"/>
+				<checkbox style="display: flex;align-items: center;margin-top: 8px;align-self: flex-end;" model:checked="{{ manual }}">手动生成</checkbox>
+				
+			</view>
+		</scroll-view>
+	</mp-half-screen-dialog>
+</scroll-view>
+<mp-actionSheet style="overflow-y: auto;max-height: 200px;" bindactiontap="sdSizeChanged" ext-class="sd_size" title="SD-XL模型尺寸选择" show="{{ pickSDSizeShow }}" actions="{{sdSizeActions}}" />
+<mp-actionSheet style="overflow-y: auto;max-height: 200px;" bindactiontap="sdStyleChanged" ext-class="sd_size" title="SD-XL风格选择" show="{{ pickSDStyleShow }}" actions="{{sdStyleActions}}" />
+<mp-gallery show="{{ showGallery }}" imgUrls="{{ imgUrls }}" current="{{ currentUrlIndex }}" showDelete="{{ false }}" hide="hideGallery" />

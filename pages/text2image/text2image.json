@@ -1,0 +1,13 @@
+{
+	"usingComponents": {
+		"my-express": "/components/express/express",
+		"my-account-view": "/components/my_account_view/my_account_view",
+		"mp-tabbar": "weui-miniprogram/tabbar/tabbar",
+		"my-tip": "/components/tip/tip",
+		"mp-checkbox-group": "weui-miniprogram/checkbox-group/checkbox-group",
+		"mp-checkbox": "weui-miniprogram/checkbox/checkbox",
+		"mp-cells": "weui-miniprogram/cells/cells",
+		"mp-cell": "weui-miniprogram/cell/cell",
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog"
+	}
+}

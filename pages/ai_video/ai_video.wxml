@@ -1,0 +1,160 @@
+<mp-navigation-bar back="{{true}}" title="{{'AI 短视频'}}" />
+<scroll-view class="page-scroll-view" scroll-y type="list" scroll-with-animation style="margin-bottom: 16px;">
+	<my-tip tip="{{'提供文字图片,即可生成视频;可加LOGO、背景音乐、片头片尾'}}" />
+	<my-account-view />
+	<view style="width: 100%;display: flex;flex-direction: column;align-items: stretch;">
+		<mp-cells style="width: 100%;">
+			<my-tip slot="footer" tip="{{ tip }}" />
+			<mp-cell bind:tap="toTextImages" title="图文片段" footer="{{ textImageDesc || '请设置' }}" link />
+			<mp-cell title="数字人" link>
+				<picker bindcancel="resetBody" slot="footer" model:value="{{selectedBodyIndex}}" range="{{bodies}}">
+					<text>{{ (selectedBodyIndex && bodies[selectedBodyIndex]) || '请选择'}}</text>
+				</picker>
+			</mp-cell>
+			<mp-cell title="视频大小" link>
+				<picker slot="footer" model:value="{{selectedResolutionIndex}}" range="{{resolutions}}">
+					<text>{{ resolutions[selectedResolutionIndex] || '请选择'}}</text>
+				</picker>
+			</mp-cell>
+			<mp-cell title="选择配音" link>
+				<picker slot="footer" model:value="{{selectedVoiceIndex}}" range="{{voices}}">
+					<text>{{ voices[selectedVoiceIndex] || '请选择'}}</text>
+				</picker>
+			</mp-cell>
+			<mp-cell title="视频标识" footer="{{ videoLogo ? '已经设置':'未设置' }}" link bind:tap="setSugar" data-type="videoLogo" />
+			<mp-cell title="背景音乐" footer="{{ bgMusic ? '已经设置':'未设置' }}" link bind:tap="setSugar" data-type="bgMusic" />
+			<mp-cell title="视频片头" footer="{{ videoBegin ? '已经设置':'未设置' }}" link bind:tap="setSugar" data-type="videoBegin" />
+			<mp-cell title="视频片尾" footer="{{ videoEnd ? '已经设置':'未设置' }}" link bind:tap="setSugar" data-type="videoEnd" />
+		</mp-cells>
+		<textarea auto-height model:value="{{name}}" style="width: calc(100% - 32px); min-height:16px;margin: 8px;line-height: 16px; max-height: 60px;flex: 1;border: 1px solid gray;padding: 8px;font-size: 16px;" placeholder="输入名称" />
+		<view style="width:100%;display: flex;justify-content: space-between;">
+			<button disabled="{{ cant_save }}" bind:tap="saveVideo" size="mini" type="primary" style="margin:8px;">保存</button>
+			<button disabled="{{ cant_generate }}" size="mini" type="primary" style="margin:8px;" bind:tap="generateVideo">生成</button>
+			<button wx:if="{{ video_records.length > 0 }}" size="mini" type="primary" style="margin:8px;" bind:tap="viewRecords">查看历史</button>
+		</view>
+	</view>
+</scroll-view>
+
+<view class="my-dialog" wx:if="{{ sugar !=null }}" style="z-index: 2;">
+	<view style="display: flex;width: 100%;align-items: center;justify-content: space-between;margin:16px 0;">
+		<button size="mini" class="my-close-button" plain="{{ true }}" bind:tap="closeSugar">X</button>
+		<text>{{ sugar.sugarName }}</text>
+		<text />
+	</view>
+	<view style="display: flex;width: 100%;flex-direction: column;">
+		<view wx:if="{{ sugar.mediaSource && (sugar.mediaSource.urlLocal || sugar.mediaSource.urlBase64 || sugar.mediaSource.urlRemote || sugar.mediaSource.url) }}" style="display: flex;width: 100%;flex-direction: column;">
+			<view style="display: flex;flex-direction: column;width: 100%;align-items: center;">
+				<text wx:if="{{ sugar.mediaSource.urlRemote }}">网络资源地址:{{ sugar.mediaSource.urlRemote }}</text>
+				<image wx:if="{{ sugar.type === 'videoLogo'}}" src="{{ sugar.mediaSource.urlLocal || sugar.mediaSource.urlBase64 || sugar.mediaSource.urlRemote || sugar.mediaSource.url }}" style="width: calc(100% -16px); padding: 8px;height: 200px;" mode="aspectFit" />
+				<view wx:if="{{ sugar.type === 'bgMusic'}}" style="width: 100%; justify-content: space-between;align-items: center;display: flex;">
+					<image src="https://rocy-ai.wang/mp_images/music.svg" style="width: 32px; padding: 8px;height: 32px;" mode="aspectFit" />
+					<my-button-group style="display: inline-flex;" buttons="{{ bgMusicButtons }}" bind:clicked="bgMusicButtonsTap" />
+				</view>
+				<video wx:if="{{ sugar.type === 'videoBegin' ||sugar.type === 'videoEnd' }}" src=" {{ sugar.mediaSource.urlLocal || sugar.mediaSource.urlBase64 || sugar.mediaSource.urlRemote || sugar.mediaSource.url  }}" show-mute-btn="{{ true }}" />
+			</view>
+		</view>
+		<view style="display: flex;justify-content: space-around;width: 100%;margin: 8px 0;">
+			<button bind:tap="selectLocalSugar" size="mini" type="primary">本地资源</button>
+			<button bind:tap="getRemoteSugar" size="mini" type="primary">网络资源</button>
+		</view>
+		<view style="display: flex;justify-content: space-around;width: 100%;margin: 8px 0;">
+			<button bind:tap="unsetSugar">重置</button>
+			<button disabled="{{ cant_set_sugar }}" type="primary" bind:tap="confirmSugar">确认</button>
+		</view>
+	</view>
+</view>
+
+<view class="my-dialog" wx:if="{{ textImagesShow }}" style="z-index: 2;">
+	<view style="display: flex;width: 100%;align-items: center;justify-content: space-between;margin:16px 0;">
+		<button size="mini" class="my-close-button" plain="{{ true }}" bind:tap="closeTextImages">X</button>
+		<text>图文片段</text>
+		<text />
+	</view>
+	<swiper indicator-dots="{{ true }}" style="height: 350px; display: flex;flex-direction: column; align-items: center;">
+		<swiper-item wx:for="{{ structs }}" wx:key="index" style="height: 350px;overflow-y: auto;">
+			<view style="display: flex;flex-direction: column;width: 100%;height: fit-content;">
+				<text wx:if="{{ item.type === 'text' }}" style="width: calc(100% - 18px); padding: 8px;height: 200px;border: 1px solid gray;">{{ item.text }}</text>
+				<image wx:else src="{{ item.mediaSource.urlLocal || item.mediaSource.urlBase64 || item.mediaSource.urlRemote || item.mediaSource.url  }}" style="width: calc(100% -16px); padding: 8px;height: 200px;" mode="aspectFit" />
+				<view style="display: flex;width: 100%; align-items: center;justify-content: space-between;margin: 8px 0;">
+					<button style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="add">增加</button>
+					<button style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="delete">删除</button>
+					<button style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="edit">编辑</button>
+				</view>
+			</view>
+		</swiper-item>
+	</swiper>
+</view>
+
+<view class="my-dialog" wx:if="{{ videoRecordsShow }}" style="z-index: 2;">
+	<view style="display: flex;width: 100%;align-items: center;justify-content: space-between;margin:16px 0;">
+		<button size="mini" class="my-close-button" plain="{{ true }}" bind:tap="closeVideoRecords">X</button>
+		<text>历史记录</text>
+		<text />
+	</view>
+	<swiper indicator-dots="{{ true }}" style="height: 400px; display: flex;flex-direction: column; align-items: center;">
+		<swiper-item wx:for="{{ video_records }}" wx:key="index" style="height: 400px;overflow-y: scroll;">
+			<view style="display: flex; flex-direction: column;width: 100%;align-items: center;">
+				<video wx:if="{{ item.videoAddr }}" />
+				<mp-cells>
+					<mp-cell wx:if="{{ item.videoAddr }}" title="视频地址" bind:tap="copyAddress" data-address="{{ item.videoAddr }}" footer="拷贝地址" />
+					<mp-cell title="名称">
+						<text slot="footer" style="width: 150px;" class="ellipsis">{{ item.name}}</text>
+					</mp-cell>
+					<mp-cell title="状态" footer="{{ item.status }}" />
+					<mp-cell title="时间" footer="{{ item.create_time }}" />
+					<mp-cell wx:if="{{ item.failReason }}" title="失败原因" footer="点击查看" data-reason="{{ item.failReason }}" bind:tap="viewReason" />
+					<mp-cell wx:if="{{ item.points }}" title="点数" footer="{{ item.points }}" />
+					<mp-cell wx:if="{{ item.basicDuration > 1 }}" title="秒长" footer="{{ item.basicDuration }}" />
+					<mp-cell wx:if="{{ item.digitalHumanDuration > 1 }}" title="数字人秒长" footer="{{ item.digitalHumanDuration }}" />
+					<mp-cell wx:if="{{ item.money }}" title="花费" footer="{{ item.money }}" />
+					<my-tip wx:if="{{ item.videoAddr }}" tip="视频地址只保留7天;请拷贝地址另行下载" />
+					<my-tip tip="加载最近3条记录;无用记录请及早删除;1分钟自动刷新结果" />
+				</mp-cells>
+				<view style="display: flex;width: 100%; align-items: center;justify-content: space-between;margin: 8px 0;">
+					<button wx:if="{{ item.can_edit }}" style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="editRecord">编辑</button>
+					<button style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="copyRecord">拷贝</button>
+					<button wx:if="{{ item.can_delete }}" type="warn" style="margin: 3px;" type="primary" data-index="{{ index }}" bind:tap="deleteRecord">删除</button>
+				</view>
+			</view>
+		</swiper-item>
+	</swiper>
+</view>
+
+
+<view class="my-dialog" wx:if="{{ index !==null }}" style="height: 450px;z-index: 3;">
+	<view style="display: flex;width: 100%;align-items: center;justify-content: space-between;margin:16px 0;">
+		<button size="mini" class="my-close-button" plain="{{ true }}" bind:tap="doneUpsert">X</button>
+		<text>图文片段-{{ editing ? "编辑" :"添加" }}</text>
+		<text></text>
+	</view>
+	<view style="display: flex;flex-direction: column; width: 100%; align-items: center;height: 300px;justify-content: space-between;overflow-y: auto;">
+		<textarea wx:if="{{ type }}" auto-height model:value="{{text}}" style="min-height:16px;margin: 8px;line-height: 16px; max-height: 160px;flex: 1;border-bottom: 1px solid gray;padding: 8px;font-size: 16px; width: calc(100% - 32px);" placeholder="在这里输入内容" />
+		<image wx:else src="{{ mediaSource && (mediaSource.urlLocal || mediaSource.urlBase64 || mediaSource.urlRemote || mediaSource.url  ) }}" style="width: calc(100% -16px); padding: 8px;height: 200px;align-self: center;" mode="aspectFit" />
+		<view style="display: flex;justify-content: space-around;width: 100%;">
+			<button size="mini" bind:tap="aiGenerate" type="primary">AI生成</button>
+			<button wx:if="{{ type === false }}" bind:tap="selectLocal" size="mini" type="primary">本地图片</button>
+			<button wx:if="{{ type === false }}" bind:tap="getRemote" size="mini" type="primary">网络图片</button>
+		</view>
+		<mp-cells style="display: flex;flex-direction: column;">
+			<mp-cell title="类型">
+				<checkbox slot="footer" model:checked="{{ type }}">当前为 {{ type ? '文本':'图片' }}</checkbox>
+			</mp-cell>
+			<mp-cell title="位置" wx:if="{{ editing === false }}">
+				<checkbox slot="footer" model:checked="{{ tail }}">添加至最后</checkbox>
+			</mp-cell>
+		</mp-cells>
+		<view style="display: flex;justify-content: space-around;margin: 8px 0;">
+			<button bind:tap="doneUpsert">取消</button>
+			<button bind:tap="confirmUpsert" type="primary">{{ editing ? "确定" :"添加" }}</button>
+		</view>
+	</view>
+</view>
+
+
+<view class="my-dialog" wx:if="{{ aiGenerateShow }}" style="height: 500px;z-index: 4;">
+	<view style="display: flex;width: 100%;align-items: center;justify-content: space-between;margin:16px 0;">
+		<button size="mini" class="my-close-button" plain="{{ true }}" bind:tap="doneGenerate">X</button>
+		<text></text>
+	</view>
+	<my-ai-generate isText="{{ type }}" bind:generated="gotGenerated" />
+</view>

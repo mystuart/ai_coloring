@@ -1,0 +1,32 @@
+function short(v, len) {
+	return v.substring(0, len)
+}
+
+function dateFormat(d){
+	const date = [d.getMonth()+1,d.getDate()].join("-")
+	const time = [d.Hour()+1,d.getMinute(),d.getSecond()].join(":")
+	return [date,time].join(" ")
+}
+
+function addBasePrefix(s) {
+	return "data:image/png;base64," + s
+}
+
+function md5ToUrl(md5) {
+	return "https://rocy-ai.wang:18000/image/show?md5=" + md5
+}
+
+function toFixed(v, length) {
+	return v.toFixed(length || 3)
+}
+
+function length(v) {
+	return v.length
+}
+module.exports = {
+	short: short,
+	length: length,
+	addBasePrefix: addBasePrefix,
+	toFixed: toFixed,
+	md5ToUrl: md5ToUrl
+}

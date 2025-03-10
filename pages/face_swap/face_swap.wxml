@@ -1,0 +1,70 @@
+<mp-navigation-bar back="{{true}}" title="{{'AI 改头换面'}}" />
+<scroll-view class="page-scroll-view" scroll-y type="list" scroll-with-animation style="margin-bottom: 16px;">
+	<my-tip tip="{{'其他照片上的人脸，换成自己的;请合理使用违规封号处理'}}" />
+	<my-account-view price="{{ priceFace }}" show_model_price="{{ false }}"></my-account-view>
+	<view style="width: 100%;display: flex;flex-direction: column;align-items: center;">
+		<view style="display: flex;align-items: center;justify-content: space-between;width: 100%;margin: 8px 0;">
+			<button style="marker-end: 8px;" bind:tap="selectTarget" size="mini" type="primary">{{ is_picture ? '上传目标图片' :'上传目标视频' }}</button>
+			<checkbox style="display: flex;align-items: center;" model:checked="{{ is_picture }}">当前为:{{ is_picture ? '图片':'视频' }}</checkbox>
+		</view>
+		<image style="max-width: calc(100% - 16px);" wx:if="{{ is_picture }}" bind:tap="selectTarget" mode="aspectFit" src="{{selectedTargetPicture}}"></image>
+		<view wx:else style="width:100%;display: flex;flex-direction: column;">
+			<image wx:if="{{ selectedTargetVideo === null }}" bind:tap="selectTarget" mode="aspectFit" class="my-bc-image" src="{{selectedTargetVideoHolder}}"></image>
+			<video wx:else src="{{ selectedTargetVideo }}" style="width: 100%;" show-mute-btn="{{ true }}" />
+			<mp-cells>
+				<mp-cell title="保持目标帧率">
+					<checkbox slot="footer" model:checked="{{ keepTargetFps }}"></checkbox>
+				</mp-cell>
+				<mp-cell title="保留临时帧">
+					<checkbox slot="footer" model:checked="{{ keepTemporaryFrames }}"></checkbox>
+				</mp-cell>
+				<mp-cell title="忽略目标声音">
+					<checkbox slot="footer" model:checked="{{ skipTargetAudio }}"></checkbox>
+				</mp-cell>
+				<mp-cell title="多脸模式">
+					<checkbox slot="footer" model:checked="{{ manyFaces }}"></checkbox>
+				</mp-cell>
+			</mp-cells>
+			<my-tip wx:if="{{ is_picture === false }}" tip="{{'视频限长60秒'}}" />
+		</view>
+	</view>
+	<view wx:if="{{ can_execute }}">
+		<my-divider />
+		<view style="display: flex; flex-direction: column;width: 100%;align-items: center;">
+			<text style="font-size: smaller;align-self: center;">点击选择要使用的头面图片</text>
+			<image style="max-width: calc(100% - 16px);" bind:tap="selectFacePicture" mode="aspectFit" src="{{selectedFacePicture}}"></image>
+		</view>
+		<my-divider />
+		<button bind:tap="execute" disabled="{{ can_execute === false || executing }}" type="primary" style="width: 100%;margin-top: 8px;margin-bottom: 8px;">改头换面</button>
+	</view>
+	<button bind:tap="viewResult" wx:if="{{ faceSwapResults.length > 0 }}" type="primary" style="width: 100%;margin-top: 8px;margin-bottom: 8px;">查看结果</button>
+
+</scroll-view>
+<mp-half-screen-dialog title="改头换面结果" show="{{ can_show_result }}" bindclose="closeResult">
+	<swiper slot="desc" style="height: 300px" indicator-dots>
+		<swiper-item wx:for="{{ faceSwapResults }}" wx:key="from_date" >
+			<scroll-view scroll-y="{{true}}" type="list">
+				<mp-cells>
+					<mp-cell title="换脸类型" footer="{{ item['is_image'] ? '图片':'视频' }}" />
+					<mp-cell title="入列时间" footer="{{ item['enqueue_ts'] }}" />
+					<mp-cell title="执行时间" footer="{{ item['execute_ts'] || '尚未执行' }}" />
+				</mp-cells>
+				<mp-cells wx:if="{{ item.result_md5 === null }}">
+					<mp-cell title="排队序号" footer="{{ item['index_in_queue'] }}" />
+				</mp-cells>
+				<mp-cells wx:else>
+					<mp-cell title="完成时间" footer="{{ item['finish_ts'] }}" />
+					<mp-cell title="查看结果" bind:tap="showResultMd5" data-data="{{ item }}">
+						<button type="primary" size="mini" slot="footer">
+							点击查看
+						</button>
+					</mp-cell>
+				</mp-cells>
+			</scroll-view>
+		</swiper-item>
+	</swiper>
+</mp-half-screen-dialog>
+<mp-half-screen-dialog bindbuttontap="resultButtonTap" buttons="{{ viewResultButtons }}" title="图片查看" show="{{ result_swap !==null }}" bindclose="closeSwapResult">
+	<image wx:if="{{ result_swap.is_image }}" slot="desc" src="{{ result_swap.url }}" style="max-width: calc(100% - 16px);" mode="aspectFit"></image>
+	<video wx:else src="{{ result_swap.url  }}" slot="desc"  style="width: 100%;" show-mute-btn="{{ true }}" />
+</mp-half-screen-dialog>

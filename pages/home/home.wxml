@@ -1,0 +1,6 @@
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<my-account-view></my-account-view>
+	<view data-weui-theme="{{theme}}">
+		<ai-item wx:key="*this" wx:for="{{ assistants }}" title="{{ item[0] }}" description="{{ item[1] }}" image="{{ item[2] }}"  page="{{ item[3] }}" alias=" {{ item[4] }}" />
+	</view>
+</scroll-view>

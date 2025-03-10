@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "my-account-view": "/components/my_account_view/my_account_view",
+	"ai-item": "/components/ai_item/ai_item"
+  }
+}

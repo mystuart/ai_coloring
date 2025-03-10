@@ -1,0 +1,11 @@
+{
+  "usingComponents": {
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog",
+	"mp-cell": "weui-miniprogram/cell/cell",
+	"mp-cells": "weui-miniprogram/cells/cells",
+	"my-divider": "/components/divider/divider",
+	"my-tip": "/components/tip/tip",
+	"my-account-view": "/components/my_account_view/my_account_view",
+	"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar"
+  }
+}

@@ -1,19 +1,20 @@
-// app.js
+import '@/utils/lodash-fix';
+import _ from "@/npm/lodash/index";
+// 京ICP备2022034770号-6X 小程序备案号
+/**
+ * 相对于上一次的更新
+ * 1、增加小程序分享
+ * 2、修复密码不能输入字母的问题
+ * 3、增加AI文生图模块
+ */
+import {
+	autoLogin
+} from 'utils/login'
 App({
-  onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
-  },
-  globalData: {
-    userInfo: null
-  }
+	onLaunch() {
+		autoLogin()
+	},
+	globalData: {
+		theme: "light"
+	}
 })

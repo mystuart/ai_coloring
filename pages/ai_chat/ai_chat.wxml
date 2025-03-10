@@ -1,0 +1,85 @@
+<wxs module="util" src="../../utils/wxml.wxs" />
+<scroll-view scroll-y type="list" style="height: 100%;">
+	<view style="display: flex;flex-direction: column; height:calc(100% - 16px);padding: 8px;">
+		<mp-navigation-bar back="{{true}}" title="AI Chat" />
+		<view style="display: flex;flex-direction: column;">
+			<my-tip tip="{{'模型随意调优调参;还能私人订制'}}"></my-tip>
+			<my-express style="align-self: flex-start;margin:8px 0;" url="{{ SERVICE_URL_CHAT_ANSWER }}" generationArg="{{ generationArg }}" />
+			<my-account-view style="margin:8px 0;" show_model_price></my-account-view>
+			<my-public-private style="margin:8px 0;" />
+		</view>
+		<view id="footer" style="display: flex;align-items: center;">
+			<image bind:tap="moreClicked" src="https://rocy-ai.wang/mp_images/more.svg" style="width: 24px;height: 24px;" />
+			<textarea auto-height model:value="{{prompt}}" style="min-height:16px;margin: 8px;line-height: 16px; max-height: 60px;flex: 1;border: 1px solid gray;padding: 8px;font-size: 16px;" placeholder="在这里输入任何问题" />
+			<button size="mini" style="padding: 8px; width: auto;height: auto;display: flex;align-items: center;background-color: transparent;justify-content: center;" bind:tap="send" disabled="{{ executing }}">
+				<image src="https://rocy-ai.wang/mp_images/send.svg" style="width: 24px;height: 24px;" />
+			</button>
+		</view>
+		<view style="display: flex;align-items: center;width: 100%; justify-content: space-between;">
+			<my-tip tip="怎么提问才好？;试试提示词工程" />
+			<button bind:tap="toPrompt" type="primary" plain="{{true}}" size="mini">去试试</button>
+		</view>
+		<view wx:if="{{ dialogList.length }}" style="flex: 1;border: 1px solid gray;margin:8px 0;padding: 8px; flex-direction: column;overflow-y: auto;" id="qa_container">
+			<view style="width: 100%;border-bottom:1px dashed gray;margin-bottom: 8px;display: flex;flex-direction: column;padding: 8px;" wx:for="{{dialogList}}" wx:key="question_time">
+				<view id="q" style="display: flex;align-items: center;align-self: flex-end;flex-wrap: wrap;justify-content: space-between;width:100%">
+					<view style="display: flex;align-items: center;">
+						<image wx:if="{{ currentItem===null }}" data-item="{{ item }}" bind:tap="showItemDetail" class="my-icon" src="https://rocy-ai.wang/mp_images/more.svg" />
+						<image data-item="{{ item.answer }}" wx:if="{{ item.answer }}" bind:tap="copyItem" class="my-icon" src="https://rocy-ai.wang/mp_images/copy_blue.svg" />
+						<view style="display: flex;align-items: center;" wx:else>
+							<image data-md5="{{ item.md5 }}" bind:tap="showGallery" class="my-icon" src="https://rocy-ai.wang/mp_images/gallery.svg" />
+							<image data-md5="{{ item.md5 }}" bind:tap="saveImage" style="padding: 4px;" class="my-icon" src="https://rocy-ai.wang/mp_images/save_blue.svg" />
+						</view>
+					</view>
+					<text style="color: gray;font-size: smaller;">{{ item.question }}</text>
+				</view>
+				<text wx:if="{{ item.answer }}" style="color: gray;font-size: smaller;align-self: flex-start;">{{ item.answer }}</text>
+				<image style="align-self: center;" data-md5="{{ item.md5 }}" mode="aspectFit" bind:tap="showGallery" wx:else src="{{ util.md5ToUrl(item.md5) }}" />
+			</view>
+		</view>
+		<view wx:else style="font-size: smaller;flex:1;align-items: center;justify-content: center;width: 100%;display: flex;">
+			<text>想难倒我？那可不是一件容易的事</text>
+		</view>
+
+	</view>
+	<mp-half-screen-dialog bindclose="closeDialog" show="{{ showDialog }}" title="AI Chat">
+		<mp-cells slot="desc">
+			<mp-cell title="对话日期">
+				<picker bindchange="selectedDateChanged" slot="footer" model:value="{{selectedDateIndex}}" range="{{dialogDates}}">
+					<text>{{ dialogDates[selectedDateIndex] || '请选择'}}</text>
+				</picker>
+			</mp-cell>
+			<mp-cell title="批量模式">
+				<checkbox style="display: flex;align-items: center;" slot="footer" model:checked="{{ batch }}">当前为:{{ batch ? '批量' :'单发' }}</checkbox>
+			</mp-cell>
+			<mp-cell title="绘画模式">
+				<checkbox style="display: flex;align-items: center;" slot="footer" model:checked="{{ drawing }}"> 当前为:{{ drawing ? '绘画' :'会话' }}</checkbox>
+			</mp-cell>
+			<mp-cell title="拷贝对话">
+				<image slot="footer" bind:tap="copyDialog" class="my-icon" src="https://rocy-ai.wang/mp_images/copy_blue.svg" />
+			</mp-cell>
+		</mp-cells>
+	</mp-half-screen-dialog>
+	<mp-half-screen-dialog bindclose="closeItemDetail" show="{{ currentItem }}" title="大模型详情">
+		<mp-cells slot="desc">
+			<mp-cell title="大模型算法" wx:if="{{ currentItem.model_name }}">
+				<text slot="footer">{{ currentItem.model_name }}</text>
+			</mp-cell>
+			<mp-cell title="私域模型" wx:if="{{ currentItem.model_id }}">
+				<text slot="footer">{{ currentItem.model_id }}</text>
+			</mp-cell>
+			<mp-cell title="本次消耗">
+				<text slot="footer">{{ currentItem.change  }}元</text>
+			</mp-cell>
+			<mp-cell title="答复Token数" wx:if="{{currentItem.completion_tokens}}">
+				<text slot="footer">{{ currentItem.completion_tokens }}</text>
+			</mp-cell>
+			<mp-cell title="提问Token数" wx:if="{{currentItem.prompt_tokens }}">
+				<text slot="footer">{{ currentItem.prompt_tokens }}</text>
+			</mp-cell>
+			<mp-cell title="图片大小" wx:if="{{currentItem.size }}">
+				<text slot="footer">{{ currentItem.size }}</text>
+			</mp-cell>
+		</mp-cells>
+	</mp-half-screen-dialog>
+</scroll-view>
+<mp-gallery showDelete="{{ false }}" show="{{showGalleryMd5}}" imgUrls="{{ md5Images }}" current="{{ showGalleryIndex}}" />

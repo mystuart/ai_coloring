@@ -1,0 +1,15 @@
+{
+	"usingComponents": {
+		"mp-gallery": "weui-miniprogram/gallery/gallery",
+		"my-button-group": "/components/button_group/button_group",
+		"my-divider": "/components/divider/divider",
+		"my-account-view": "/components/my_account_view/my_account_view",
+		"mp-cell": "weui-miniprogram/cell/cell",
+		"mp-cells": "weui-miniprogram/cells/cells",
+		"my-public-private": "/components/public_private/public_private",
+		"mp-tabbar": "weui-miniprogram/tabbar/tabbar",
+		"mp-actionSheet": "weui-miniprogram/actionsheet/actionsheet",
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog",
+		"my-tip": "/components/tip/tip"
+	}
+}

@@ -1,0 +1,32 @@
+<mp-navigation-bar back="{{true}}" title="私域模型">
+</mp-navigation-bar>
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<my-button-group buttons="{{mainButtons || []}}" bind:clicked="mainButtonsClicked" />
+	<view style="display: flex;flex-direction: column;" id="model_operation">
+		<text style="align-self: center;font-size: smaller;">我的模型</text>
+		<my-button-group wx:if="{{!modelsEmpty}}" buttons="{{modelButtons || []}}" bind:clicked="modelButtonsClicked" />
+		<button wx:if="{{modelsEmpty}}" bind:tap="addNewModel" id="add_model_empty" style="background-color: #409eff;margin-top: 8px;">
+			+
+		</button>
+		<mp-tabbar model:current="{{currentModelIndex}}" style="margin-top: 3px;" list="{{modelsTabBarList }}"></mp-tabbar>
+		<view style="display: flex;flex-direction: column;">
+			<progress wx:if="{{ percent !== null }}" percent="{{ percent }}" style="margin: 8px 0;" show-info="{{ true}}"/>
+			<my-upload-files bind:filesChanged="uploadFileToModel" />		
+		</view>
+		<view id="uploader" style="margin:3px;display: flex;flex-direction: column;">
+			<view style="display: flex;align-items: center;margin:8px 3px;font-size: smaller;justify-content: space-between;" wx:for="{{currentModelFiles}}" wx:key="name">
+				<view style="display: flex;align-items: center;">
+					<image src="{{item.icon}}" style="width: 16px;height:16px;margin-right: 3px;" />
+					<text style="word-break: break-all;">{{item.name}}</text>
+				</view>
+				<view style="display: flex;align-items: center;">
+					<text>{{item.size}}</text>
+					<image data-index="{{index}}" bind:tap="delete" src="https://rocy-ai.wang/mp_images/delete.svg" style="width: 40px;height:20px;margin-left: 3px;border: 1px solid #d4237a;" />
+				</view>
+			</view>
+		</view>
+	</view>
+	<mp-half-screen-dialog title="输入模型名称" show="{{showModelNameDialog}}" bindbuttontap="gotModelName" buttons="{{[{text:'取消',type: 'default'},{text:'确定',type:'primary'}]}}">
+		<input slot="desc" model:value="{{newModelName}}" type="text" placeholder="在这里输入模型名称" />
+	</mp-half-screen-dialog>
+</scroll-view>

@@ -1,0 +1,13 @@
+{
+	"usingComponents": {
+		"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+		"mp-cell": "weui-miniprogram/cell/cell",
+		"mp-cells": "weui-miniprogram/cells/cells",
+		"my-express": "/components/express/express",
+		"my-public-private": "/components/public_private/public_private",
+		"my-account-view": "/components/my_account_view/my_account_view",
+		"my-tip": "/components/tip/tip",
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog",
+		"mp-gallery": "weui-miniprogram/gallery/gallery"
+	}
+}

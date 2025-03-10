@@ -1,0 +1,9 @@
+{
+	"usingComponents": {
+		"my-button-group": "/components/button_group/button_group",
+		"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+		"mp-tabbar": "weui-miniprogram/tabbar/tabbar",
+		"my-upload-files": "/components/upload_files/upload_files",
+		"mp-half-screen-dialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog"
+	}
+}

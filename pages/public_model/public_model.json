@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "my-button-group": "/components/button_group/button_group",
+    "mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+    "mp-cell": "weui-miniprogram/cell/cell",
+    "mp-cells": "weui-miniprogram/cells/cells"
+  }
+}

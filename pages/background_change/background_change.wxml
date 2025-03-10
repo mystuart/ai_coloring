@@ -1,0 +1,28 @@
+<mp-navigation-bar back="{{true}}" title="{{'AI 抠图'}}" />
+<scroll-view class="page-scroll-view" scroll-y type="list" scroll-with-animation style="margin-bottom: 16px;">
+	<my-tip tip="{{'保留人像，背景可换颜色也可换风景'}}" />
+	<my-account-view price="{{'抠图'}}" show_model_price="{{ false }}"></my-account-view>
+	<view class="my-bc-image-container">
+		<text style="font-size: smaller;align-self: center;">点击选择要更改背景的图片</text>
+		<image bind:tap="selectFacePicture" mode="aspectFit" class="my-bc-image" src="{{selectedFacePicture}}"></image>
+	</view>
+	<my-divider />
+	<view>
+		<view style="display: flex;align-items: center;justify-content: space-between;width: 100%;">
+			<switch model:checked="{{usePureColor}}"><text style="font-size: smaller;">{{ usePureColor ? "使用纯色":"使用图片" }}</text></switch>
+
+		</view>
+		<my-color-picker wx:if="{{ usePureColor }}" bind:selectedColorChanged="selectedColorChanged"></my-color-picker>
+		<view wx:else style="display: flex; flex-direction: column;width: 100%;padding: 8px;">
+			<text style="font-size: smaller;align-self: center;">点击选择要使用的背景图片</text>
+			<image bind:tap="selectBackPicture" mode="aspectFit" class="my-bc-image" src="{{selectedBackPicture}}"></image>
+		</view>
+	</view>
+	<my-divider />
+	<button id="executeBtn" bind:tap="execute" disabled="{{ executing }}" type="primary" style="width: 100%;margin-top: 8px;margin-bottom: 8px;">抠图</button>
+	<view id="result" wx:if="{{changedResultBase64}}" style="display: flex; flex-direction: column;width: 100%;">
+		<text style="font-size: smaller;align-self: center;">抠图结果如下</text>
+		<image mode="aspectFit" class="my-bc-image" src="{{changedResultBase64}}"></image>
+		<button style="width: 100%;margin-top: 3px;margin-bottom: 3px;" type="primary" bind:tap="saveResult">保存结果图片</button>
+	</view>
+</scroll-view>

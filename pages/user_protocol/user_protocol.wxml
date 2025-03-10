@@ -1,0 +1,10 @@
+<view class="page" data-weui-theme="{{theme}}">
+	<mp-navigation-bar title="用户协议"></mp-navigation-bar>
+	<scroll-view class="scrollarea" scroll-y type="list" class="page-scroll-view page-height">
+		<view style="padding: 8px;">
+			<text>
+				{{ text }}
+			</text>
+		</view>
+	</scroll-view>
+</view>

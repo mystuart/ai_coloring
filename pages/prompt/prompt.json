@@ -1,0 +1,9 @@
+{
+	"usingComponents": {
+		"mp-cell": "weui-miniprogram/cell/cell",
+		"mp-cells": "weui-miniprogram/cells/cells",
+		"mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+		"my-tip": "/components/tip/tip",
+		"mp-tabbar": "weui-miniprogram/tabbar/tabbar"
+	}
+}

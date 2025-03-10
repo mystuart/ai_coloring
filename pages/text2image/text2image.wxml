@@ -1,0 +1,64 @@
+<mp-navigation-bar back="{{true}}" title="{{'AI 文生图'}}" />
+<scroll-view class="page-scroll-view" scroll-y type="list">
+	<view style="display: flex;flex-direction: column;">
+		<my-tip tip="{{'简单的易用，专业的可控，效果自然不同'}}"></my-tip>
+		<my-account-view show_model_price="{{ currentIndex === 0 }}" price="{{ currentIndex === 1 ?'SD-XL绘画':null}}"></my-account-view>
+		<my-express style="align-self: flex-start;" url="{{ SERVICE_URL_IMAGE_GENERATE }}" generationArg="{{ generationArg }}" />
+		<mp-tabbar model:current="{{currentIndex}}" style="margin-top: 3px;" list="{{tabBarList }}" />
+		<text style="align-self: center;margin-top: 8px;margin-bottom: 8px;">{{ currentIndex === 0 ? 'Open AI DALL-E 模型' : 'Stable Diffusion XL 模型' }}</text>
+		<view style="display: flex;justify-content: space-between;align-items: center;font-size: smaller;">
+			<button bind:tap="save" size="mini" type="primary">
+				<text style="font-size: smaller;">保存</text>
+			</button>
+			<textarea auto-focus="{{ true }}" auto-height model:value="{{prompt}}" style="min-height:30px;margin-left: 8px;margin-right: 8px;line-height: 30px; max-height: 60px;flex: 1;" placeholder="在这里输入图片要求" />
+			<button bind:tap="execute" disabled="{{ generating === true }}" size="mini" type="primary">
+				<text style="font-size: smaller;">执行</text>
+			</button>
+		</view>
+		<view id="dall" wx:if="{{ currentIndex === 1 }}">
+			<mp-cell title="绘画风格">
+				<picker slot="footer" model:value="{{selectedSDStyleIndex}}" range="{{SD_StyleNames}}">
+					<button size="mini" type="primary" style="display: flex;align-items: center;width: 100px;justify-content: space-between;">
+						<text style="display: flex;justify-content: center;font-size: smaller;">{{ selectedSDStyleName }}</text>
+						<image src="https://rocy-ai.wang/mp_images/down_white.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+					</button>
+				</picker>
+			</mp-cell>
+			<mp-cell title="绘画尺寸">
+				<text style="display: flex;justify-content: center;font-size: smaller;">{{selectedSDSizeValue}}</text>
+				<picker slot="footer" model:value="{{selectedSDSizeIndex}}" range="{{SD_SizeNames}}">
+					<button size="mini" type="primary" style="display: flex;align-items: center;width: 100px;justify-content: space-between;">
+						<text style="display: flex;justify-content: center;font-size: smaller;">{{ selectedSDSizeName }}</text>
+						<image src="https://rocy-ai.wang/mp_images/down_white.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+					</button>
+				</picker>
+			</mp-cell>
+			<mp-cell title="迭代步数">
+				<picker slot="footer" model:value="{{selectedSDStepIndex}}" range="{{SD_SizeNames}}">
+					<button size="mini" type="primary" style="display: flex;align-items: center;width: 100px;justify-content: space-between;">
+						<text style="display: flex;justify-content: center;font-size: smaller;">{{ selectedSDStepName }}</text>
+						<image src="https://rocy-ai.wang/mp_images/down_white.svg" style="width: 16px;height:16px;margin-left: 3px;" />
+					</button>
+				</picker>
+			</mp-cell>
+			<my-tip tip="{{'迭代步数越大;耗时越长;效果越好'}}"></my-tip>
+			<mp-cell title="负向指令">
+				<textarea auto-height model:value="{{negative_prompt}}" style="min-height:30px;margin-left: 8px;margin-right: 8px;line-height: 30px;flex: 1;height: 30px;" placeholder="在这里输入负向图片要求" />
+			</mp-cell>
+		</view>
+		<view id="dall" wx:if="{{ currentIndex === 0 }}">
+			<mp-cells title="图片大小">
+				<mp-checkbox-group prop="radio" multi="{{false}}" bindchange="dallSizeChange">
+					<mp-checkbox wx:for="{{dallSizeItems}}" wx:key="value" label="{{item.name}}" value="{{item.value}}" checked="{{item.value === selectedDallSize}}"></mp-checkbox>
+				</mp-checkbox-group>
+				<text style="align-self: flex-end;" slot="footer" style="font-size: smaller;color: gray;width: 100%; display: flex;justify-content: center;">像素大小:{{
+					selectedSizeDALLPixel
+					}}</text>
+			</mp-cells>
+		</view>
+		<my-tip tip="{{'请不要用于非法网络传播，否则永久封号处理'}}"></my-tip>
+	</view>
+	<mp-half-screen-dialog buttons="{{[{text:'取消',type:'default'},{text:'保存',type:'primary'}]}}" bindbuttontap="generatedDialogTap" show="{{generated}}" maskClosable="{{true}}" title="成功生成">
+		<image slot="desc" style="width: 100%;" mode="aspectFit" src="{{ generated }}" wx:if="{{ generated }}" />
+	</mp-half-screen-dialog>
+</scroll-view>

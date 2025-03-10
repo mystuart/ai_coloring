@@ -1,0 +1,11 @@
+<view wx:if="{{ visibleCount>0 }}" style="display: flex;flex-direction: column;align-items: flex-end;" class="{{ border ? 'container-boder' :'' }}">
+	<view class="btn-container" style="flex-direction: {{ horizontal ? 'row':'column' }};">
+		<button bind:tap="action" data-index="{{index}}"
+		plain="{{ item.primary !== true && item.warn !== true }}"
+		 data-item="{{item}}" size="mini" type="{{ item.primary ? 'primary':(item.warn ? 'warn':'default') }}" class="btn-group" wx:for="{{buttons}}" wx:key="index" disabled="{{ item['disabled']===true }}" wx:if="{{ item['visible']!==false }}">
+			<image style="	height: 16px;width: 16px;" mode="aspectFit" wx:if="{{ item['icon'] }}" src="{{ item['icon'] }}"></image>
+			<text wx:if="{{ item['text'] }}" style="display:flex;height: 16px;font-size: 16px;align-items: center;">{{item["text"]}}</text>
+		</button>
+	</view>
+	<slot></slot>
+</view>

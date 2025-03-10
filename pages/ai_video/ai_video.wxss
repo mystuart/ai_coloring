@@ -1,0 +1,14 @@
+.my-dialog {
+	background-color: white;
+	width: calc(100% - 34px);
+	position: absolute;
+	bottom: 0;
+	padding: 16px;
+	border-radius: 30px;
+	border: 1px solid gray
+}
+
+.my-close-button {
+	font-size: large;
+	margin: unset;
+}

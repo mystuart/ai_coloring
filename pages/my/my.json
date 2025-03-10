@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "my-divider": "/components/divider/divider",
+    "my-account-view": "/components/my_account_view/my_account_view",
+    "mp-cell": "weui-miniprogram/cell/cell",
+    "mp-cells": "weui-miniprogram/cells/cells"
+  }
+}

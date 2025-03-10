@@ -1,11 +1,69 @@
 {
+  "usingComponents": {},
+  "useExtendedLib": {
+    "kbone": true,
+    "weui": true
+  },
+  "tabBar": {
+    "color": "@tabBarColor",
+    "selectedColor": "@tabBarSelectedColor",
+    "borderStyle": "@tabBarBorderStyle",
+    "backgroundColor": "@tabBarBackgroundColor",
+    "list": [
+        {
+            "pagePath": "pages/coloring/coloring",
+            "iconPath": "@iconPathComponent",
+            "selectedIconPath": "@selectedIconPathComponent",
+            "text": "涂色卡"
+          },
+        {
+        "pagePath": "pages/home/home",
+        "iconPath": "@iconPathComponent",
+        "selectedIconPath": "@selectedIconPathComponent",
+        "text": "助手"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "iconPath": "@iconPathMy",
+        "selectedIconPath": "@selectedIconPathMy",
+        "text": "我的"
+      }
+    ]
+  },
+  "resolveAlias": {
+    "@/store/*": "/store/*",
+    "@/components/*": "/components/*",
+    "@/model/*": "/model/*",
+    "@/js/*": "/js/*",
+    "@/base/*": "/base/*",
+    "@/pages/*": "/pages/*",
+    "@/utils/*": "/utils/*",
+    "@/npm/*": "/miniprogram_npm/*"
+  },
   "pages": [
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/coloring/coloring",
+    "pages/home/home",
+	"pages/ai_video/ai_video",
+    "pages/face_swap/face_swap",
+    "pages/prompt/prompt",
+    "pages/private_model/private_model",
+    "pages/ai_chat/ai_chat",
+    "pages/text2image/text2image",
+    "pages/image2text_batch/image2text_batch",
+    "pages/word/word",
+    "pages/my/my",
+    "pages/public_model/public_model",
+    "pages/background_change/background_change",
+    "pages/login/login",
+    "pages/user_protocol/user_protocol",
+    "pages/privacy_protocol/privacy_protocol",
+    "pages/max_text/max_text",
+    "pages/prompt_child/prompt_child"
   ],
+  "themeLocation": "demo.theme.json",
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "AI玩具箱",
     "navigationBarBackgroundColor": "#ffffff"
   },
   "style": "v2",

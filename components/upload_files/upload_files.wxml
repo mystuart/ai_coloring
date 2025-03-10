@@ -1,0 +1,32 @@
+<view style="border:1px dashed lightgray;display: flex; flex-direction: column;margin:8px;padding: 8px;">
+	<view style="display: flex;justify-content: space-between;">
+		<button bind:tap="upload" size="mini" type="primary" style="width: 100%;flex:1">
+			<image src="https://rocy-ai.wang/mp_images/upload_file.svg" style="width: 16px;height:16px;"></image>
+			选择文件
+		</button>
+		<button bind:tap="showInputDialog" size="mini" type="primary" style="align-self: flex-end;margin-left:1px;">
+			<image src="https://rocy-ai.wang/mp_images/input.svg" style="width: 16px;height:16px;"></image>
+			录入
+		</button>
+	</view>
+	<my-tip wx:if="{{ tip }}" tip="{{ tip }}"/>
+	<view wx:if="{{tempFilesHas}}" style="display: flex;flex-direction: column;margin-top: 8px;margin-bottom: 8px;">
+		<view style="display: flex;align-items: center;margin:3px;font-size: smaller;justify-content: space-between;" wx:for="{{tempFiles}}" wx:key="name">
+			<view style="display: flex;align-items: center;">
+				<image src="{{item.icon}}" style="width: 16px;height:16px;margin-right: 3px;" />
+				<text>{{item.name}}</text>
+			</view>
+			<view style="display: flex;align-items: center;">
+				<text>{{item.size}}</text>
+				<image data-index="{{index}}" bind:tap="delete" src="https://rocy-ai.wang/mp_images/delete.svg" style="width: 20px;height:20px;margin-left: 3px;" />
+			</view>
+		</view>
+		<button bind:tap="ok" size="mini" type="primary" style="width: 100%; margin: 3px;">确定</button>
+	</view>
+	<mp-half-screen-dialog bindbuttontap="inputTap" show="{{showInput}}" title="录入模型文件" tips="手动录入成为TXT文件" buttons="{{inputButtons || []}}">
+		<view slot="desc" style="display: flex;flex-direction: column;">
+			<textarea model:value="{{inputText}}" style="width: 100%;" placeholder="在这里录入内容" />
+			<input style="margin-top: 8px;margin-bottom:8px;" model:value="{{ inputFileName }}" placeholder="在这里输入文件名" />
+		</view>
+	</mp-half-screen-dialog>
+</view>

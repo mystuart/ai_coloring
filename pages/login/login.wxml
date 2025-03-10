@@ -1,0 +1,56 @@
+<view class="page" data-weui-theme="{{theme}}">
+	<mp-navigation-bar title="登录/注册"></mp-navigation-bar>
+	<scroll-view class="scrollarea" scroll-y type="list" class="page-scroll-view page-height">
+		<mp-toptips msg="{{error}}" type="error" show="{{error}}"></mp-toptips>
+		<mp-form-page>
+			<mp-form id="form" rules="{{rules}}" models="{{formData}}">
+				<mp-cells>
+					<label>
+						<mp-cell prop="phone" title="手机号" ext-class="weui-cell_vcode">
+							<input data-field="phone" value="{{ formData.phone }}" bindinput="formInputChange" class="weui-input" placeholder="请输入手机号" />
+							<button bind:tap="sendCode" wx:if="{{is_register && code_sent === false}}" slot="footer" type="default" size="mini" class="weui-vcode-btn">验证码</button>
+						</mp-cell>
+						<mp-cell prop="code" title="验证码" ext-class="weui-cell_vcode" wx:if="{{is_register && code_sent}}">
+							<input data-field="code" value="{{ formData.code }}" bindinput="formInputChange" class="weui-input" placeholder="请输入验证码" />
+						</mp-cell>
+					</label>
+					<label>
+						<mp-cell prop="password" title="密码">
+							<input password value="{{formData.password}}" data-field="password" bindinput="formInputChange" class="weui-input" placeholder="请输入密码" />
+						</mp-cell>
+					</label>
+					<view wx:if="{{ is_register }}">
+						<label>
+							<mp-cell prop="password2" title="密码确认">
+								<input password value="{{formData.password2}}" data-field="password2" bindinput="formInputChange" class="weui-input" placeholder="请确认密码" />
+							</mp-cell>
+						</label>
+						<label>
+							<mp-cell prop="invite" title="邀请码">
+								<input data-field="invite" value="{{formData.invite}}" bindinput="formInputChange" class="weui-input" placeholder="邀请码(可选)" />
+							</mp-cell>
+						</label>
+					</view>
+					<view slot="footer" style="display: flex;justify-content: flex-end;flex-direction: column;margin: 8px;">
+						<text style="font-size: x-small; text-align: end;color: gray;">小程序、网页端、APP端账号是一致的</text>
+						<view style="display: flex;align-items: center; font-size: smaller;flex-wrap: wrap;">
+							<checkbox model:checked="{{agree}}" data-field="agree" style="display: flex;align-items: center;">
+								我已经阅读并同意
+							</checkbox>
+							<text bind:tap="toUserProtocol" style="color: #67C23A;">《用户协议》</text>
+							<text bind:tap="toPrivacyProtocol" style="color: #67C23A;">《隐私政策》</text>
+						</view>
+
+					</view>
+				</mp-cells>
+				<view style="display:flex;align-self: flex-end;margin-top: 8px; justify-content: flex-end; align-items: center;">
+					<label for="is_login" style="margin-inline-end: 8px;color:#409EFF">登录/注册</label>
+					<switch id="is_login" bindchange="loginRegisterChanged" model:checked="{{ is_register }}" />
+				</view>
+			</mp-form>
+			<view slot="button">
+				<button class="weui-btn" style="width: 100%;" type="primary" bindtap="submitForm">确定</button>
+			</view>
+		</mp-form-page>
+	</scroll-view>
+</view>

@@ -1,0 +1,14 @@
+<scroll-view scroll-y type="list" style="height: 100%;">
+	<view style="display: flex;flex-direction: column; height:calc(100% - 16px);padding: 8px;">
+		<mp-navigation-bar back="{{true}}" title="AI 提示词工程" />
+		<my-tip tip="{{'这是帮你生成绘画、写作指令的助手'}}"></my-tip>
+	</view>
+	<mp-tabbar model:current="{{currentIndex}}" list="{{ tabbarList }}" />
+	<mp-cells>
+		<mp-cell wx:for="{{  currentStyles }}" wx:key="category" title="{{item.category}}" footer="{{ item.categories.length}}" link bind:tap="tap" data-item="{{ item.category }}">
+			<view style="font-size: smaller;display: flex;align-items: center;margin:0 8px;vertical-align: middle;">
+				{{ item.description }}
+			</view>
+		</mp-cell>
+	</mp-cells>
+</scroll-view>

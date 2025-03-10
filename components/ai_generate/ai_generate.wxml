@@ -1,0 +1,12 @@
+<view style="display: flex;flex-direction: column;width: 100%;align-items: center;">
+	<text style="font-size: large;margin: 8px 0;">{{ isText === true ? "语言" :"图片" }}大模型生成</text>
+	<view style="display: flex;flex-direction: column; width: 100%; align-items: stretch;height: 300px;justify-content: space-between;">
+		<textarea auto-height model:value="{{prompt}}" style="min-height:16px;margin: 8px;line-height: 16px; max-height: 160px;flex: 1;border-bottom: 1px solid gray;padding: 8px;font-size: 16px; width: calc(100% - 32px);" placeholder="在这里输入AI指令" />
+		<view style="display: flex;justify-content: space-around;">
+			<button size="mini" bind:tap="doneGenerate">取消</button>
+			<button disabled="{{ cant_generate }}" bind:tap="aiExecute" size="mini" type="primary">生成</button>
+		</view>
+		<my-public-private showTextModel="{{ isText }}" showImageModel="{{ !isText }}" />
+		<my-account-view show_model_price="{{ true }}"/>
+	</view>
+</view>
