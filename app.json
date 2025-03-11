@@ -11,11 +11,11 @@
     "backgroundColor": "@tabBarBackgroundColor",
     "list": [
         {
-            "pagePath": "pages/coloring/coloring",
-            "iconPath": "@iconPathComponent",
-            "selectedIconPath": "@selectedIconPathComponent",
-            "text": "涂色卡"
-          },
+        "pagePath": "pages/coloring/coloring",
+        "iconPath": "@iconPathComponent",
+        "selectedIconPath": "@selectedIconPathComponent",
+        "text": "涂色卡"
+        },
         {
         "pagePath": "pages/home/home",
         "iconPath": "@iconPathComponent",

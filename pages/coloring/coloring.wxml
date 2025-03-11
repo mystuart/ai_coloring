@@ -1,13 +1,17 @@
 <view class="container">
-    <textarea class="input-large" placeholder="请输入你的想法，如：一只可爱的正在吹泡泡的小兔子" bindinput="onInputChange" value="{{inputValue}}"></textarea>
-  <button bindtap="generateImages">生成图案</button>
-  <view wx:if="{{images.length > 0}}">
-    <view class="tab-bar">
-      <view wx:for="{{images}}" wx:key="*this" bindtap="switchImage" data-index="{{index}}" class="{{currentIndex === index ? 'active-tab' : ''}}">
-        图片 {{index + 1}}
-      </view>
+    <view class="input-area">
+        <textarea class="input-large" placeholder="请输入你的想法，如：一只可爱的正在吹泡泡的小兔子" bindinput="onInputChange" value="{{inputValue}}"></textarea>
+        <button class="generate-button" bindtap="generateImages">生成图案</button>
     </view>
-    <image src="{{images[currentIndex]}}" mode="aspectFill" class="full-screen-image"></image>
-  </view>
-  <button wx:if="{{selectedImage}}" bindtap="printImage">打印选中图案</button>
+    <view class="image-area">
+    <view wx:if="{{images.length > 0}}">
+        <view class="tab-bar">
+        <view wx:for="{{images}}" wx:key="*this" bindtap="switchImage" data-index="{{index}}" class="{{currentIndex === index ? 'active-tab' : ''}}">
+            图片 {{index + 1}}
+        </view>
+        </view>
+        <image src="{{images[currentIndex]}}" mode="aspectFill" class="full-screen-image" style="{{imageStyle}}" > </image>
+    </view>
+    </view>
+    <button wx:if="{{selectedImage}}" bindtap="printImage">打印选中图案</button>
 </view>

@@ -25,10 +25,10 @@ Page({
     const requestData = {
         model: "Kwai-Kolors/Kolors",
         prompt: newPrompt,
-        negative_prompt: "<string>",
+        negative_prompt: "bad photo, low quality, blurry",
         image_size: "1024x1024",
         batch_size: 3, // 生成 3 张图片
-        seed: 4999999999,
+        seed: Math.floor(Math.random() * 1000000000),
         num_inference_steps: 20,
         guidance_scale: 7.5,
         // image: "data:image/webp;base64, XXX" // 如果不需要额外的图像输入，可以保持这个占位符或者删除该字段
@@ -46,7 +46,10 @@ Page({
         if (res.statusCode === 200 && res.data && res.data.data) {
           const images = res.data.data.map(item => item.url);
           this.setData({
-            images: images
+            images: images,
+            selectedImage: images[0] // 默认选中第一张图片
+          }, () => {
+            this.adjustImageSize(); // 调用调整图片尺寸的方法
           });
         } else {
           console.error('图片生成失败，响应信息：', res);
@@ -65,6 +68,32 @@ Page({
       }
     });
   },
+  // 新增调整图片尺寸的方法
+  adjustImageSize() {
+    const query = wx.createSelectorQuery().in(this);
+    query.select('.full-screen-image').boundingClientRect((res) => {
+      if (!res) {
+        console.error('未能获取到 .full-screen-image 元素');
+        return;
+      }
+      const containerHeight = wx.getSystemInfoSync().windowHeight * 0.5; // 屏幕下半部分的高度
+      const img = new Image();
+      img.src = this.data.selectedImage;
+      img.onload = () => {
+        if (img.height === 0) {
+          console.error('图片高度为 0，无法计算缩放比例');
+          return;
+        }
+        const scale = containerHeight / img.height;
+        this.setData({
+          imageStyle: `width: ${img.width * scale}px; height: ${containerHeight}px;`
+        });
+      };
+      img.onerror = () => {
+        console.error('图片加载失败');
+      };
+    }).exec();
+  },  
   switchImage(e) {
     const index = e.currentTarget.dataset.index;
     this.setData({
